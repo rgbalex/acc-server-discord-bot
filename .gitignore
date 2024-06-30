@@ -140,5 +140,7 @@ Makefile
 *.cmake
 *.cmake.in
 *.pc
-*.txt
 *.xml
+
+# Token file
+.env
