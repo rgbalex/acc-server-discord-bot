@@ -1,5 +1,7 @@
 # Assetto Corsa Competizione Server Discord Bot
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 This project aims to provide a Discord bot for managing a remote Assetto Corsa Competizione server. The bot will allow server administrators to easily control various aspects of the server directly from their Discord server.
 
 ## Features
