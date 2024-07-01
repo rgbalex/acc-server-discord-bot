@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 import aiohttp
@@ -6,14 +7,17 @@ import discord
 
 from discord import app_commands
 from discord.ext import commands
+from dotenv import load_dotenv
 
 from cogs.models.Event import Event
 
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 
 class SendToWebhook(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.event = None
+        load_dotenv()
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -22,9 +26,7 @@ class SendToWebhook(commands.Cog):
     @app_commands.command(
         name="send_to_webhook", description="Send a message to a webhook"
     )
-    async def send_to_webhook(
-        self, interaction: discord.Interaction, webhook_url: str
-    ) -> None:
+    async def send_to_webhook(self, interaction: discord.Interaction) -> None:
         # get the Event object from prior interaction with user if exists
         try:
             self.event: Event = self.bot.user_config_map[interaction.user.id]
@@ -35,7 +37,7 @@ class SendToWebhook(commands.Cog):
         payload = json.dumps(self.event.__dict__, indent=4)
 
         async with aiohttp.ClientSession() as session:
-            async with session.post(webhook_url, json=payload) as response:
+            async with session.post(WEBHOOK_URL, json=payload) as response:
                 print((await response.content.read()).decode())
                 if response.status == 200:
                     await interaction.response.send_message(

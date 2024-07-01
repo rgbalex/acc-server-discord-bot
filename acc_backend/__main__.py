@@ -15,6 +15,9 @@ except FileNotFoundError:
         json.dump(config, f, indent=4)
     raise FileNotFoundError("Please fill out the config.json file")
 
+@app.route("/")
+def home():
+    return "Hello, World!"
 
 @app.route("/event", methods=["POST"])
 def handle_webhook():
@@ -37,4 +40,4 @@ def handle_webhook():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
