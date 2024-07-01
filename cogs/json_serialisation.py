@@ -6,6 +6,7 @@ from discord.ext import commands
 
 from .views.event_view import EventJsonView
 
+
 @app_commands.guild_only()
 class JsonSerialisation(commands.GroupCog, name="json"):
     @commands.Cog.listener()
@@ -27,7 +28,7 @@ class JsonSerialisation(commands.GroupCog, name="json"):
         await interaction.response.send_message(
             f"Generated event JSON file",
             view=EventJsonView(interaction),
-            ephemeral=True
+            ephemeral=True,
         )
 
 
