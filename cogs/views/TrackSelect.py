@@ -1,12 +1,14 @@
 from cogs.views.FurtherEventOptionsModal import FurtherEventOptionsModal
 from cogs.models.Tracks import TrackType
+from cogs.models.Event import Event
 
 import discord
 
 
 class TrackSelect(discord.ui.Select):
-    def __init__(self):
+    def __init__(self, event):
         self.pretty_track = None
+        self.event: Event = event
         options = [
             discord.SelectOption(label=track.replace("_", " ").title(), value=track)
             for track in TrackType.list()
@@ -18,7 +20,7 @@ class TrackSelect(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         self.pretty_track = self.values[0].replace("_", " ").title()
         await interaction.response.send_modal(
-            FurtherEventOptionsModal(interaction, self.values[0])
+            FurtherEventOptionsModal(interaction, self.values[0], self.event)
         )
 
     def get_track(self):

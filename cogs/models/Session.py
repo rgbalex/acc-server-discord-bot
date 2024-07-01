@@ -1,4 +1,4 @@
-import json, enum
+import enum
 
 
 class SessionType(enum.Enum):
@@ -10,8 +10,17 @@ class SessionType(enum.Enum):
 
 class Session:
     def __init__(self):
-        self.hourOfDay = None
-        self.dayOfWeekend = None
-        self.timeMultiplier = None
-        self.sessionType = SessionType.UNDEFINED.value
-        self.sessionDurationMinutes = None
+        self.hourOfDay = 17
+        self.dayOfWeekend = 1
+        self.timeMultiplier = 1
+        self.sessionType = SessionType.PRACTICE
+        self.sessionDurationMinutes = 30
+
+    def to_json(self):
+        return {
+            "hourOfDay": self.hourOfDay,
+            "dayOfWeekend": self.dayOfWeekend,
+            "timeMultiplier": self.timeMultiplier,
+            "sessionType": self.sessionType.value,
+            "sessionDurationMinutes": self.sessionDurationMinutes,
+        }

@@ -1,10 +1,14 @@
 import discord
 import logging
 
+from cogs.models.Event import Event
+
 
 class FurtherEventOptionsModal(discord.ui.Modal, title="Event setup for <track>"):
-    def __init__(self, parent_interaction, track: str):
-        super().__init__(timeout=20)
+    def __init__(self, parent_interaction, track: str, event: Event):
+        super().__init__()
+        self.event: Event = event
+        self.track_value = track
         self.parent_interaction = parent_interaction
         self.title = self.title.replace("<track>", track.replace("_", " ").title())
 
@@ -29,13 +33,19 @@ class FurtherEventOptionsModal(discord.ui.Modal, title="Event setup for <track>"
     )
 
     async def on_submit(self, interaction: discord.Interaction):
+        self.event.track = self.track_value
+        self.event.preRaceWaitingTimeSeconds = int(self.preRaceWaitingTimeSeconds.value)
+        self.event.postQualySeconds = int(self.postQualySeconds.value)
+        self.event.postRaceSeconds = int(self.postRaceSeconds.value)
+        self.event.sessionOverTimeSeconds = int(self.sessionOverTimeSeconds.value)
         await interaction.response.send_message(
             "Confirmed event setup.", ephemeral=True
         )
 
-    async def on_timeout(self, interaction: discord.Interaction):
-        await interaction.response.send_message(
-            "Defining an event timed out.", view=None, ephemeral=True
+    async def on_timeout(self):
+        embed = discord.Embed(description=f"Event Setup has timed out.")
+        await self.parent_interaction.edit_original_response(
+            content="", embed=embed, view=None
         )
 
     async def on_error(
