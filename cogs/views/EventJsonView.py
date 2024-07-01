@@ -1,13 +1,14 @@
+from typing import Coroutine
 from cogs.views.AddNewSessionModal import AddNewSessionModal
 from cogs.views.ChangeWeatherModal import ChangeWeatherModal
 from cogs.views.TrackSelect import TrackSelect
 
-import discord
+import discord, json
 
 
 class EventJsonView(discord.ui.View):
-    def __init__(self, interaction, event, _timeout=180):
-        super().__init__(timeout=_timeout)
+    def __init__(self, interaction: discord.Interaction, event):
+        super().__init__(timeout=4)
         self.event = event
         self.track_select = TrackSelect()
         self.parent_interaction = interaction
@@ -46,3 +47,15 @@ class EventJsonView(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         pass
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        if interaction.user.id == self.parent_interaction.user.id:
+            return True
+        embed = discord.Embed(description=f"Sorry, but this interaction can only be used by {self.parent_interaction.user.name}.")
+        await interaction.channel.send(embed=embed, delete_after=5)
+        await interaction.response.defer()
+        return False
+
+    async def on_timeout(self):
+        embed = discord.Embed(description=f"Interaction has timed out. Current model output below...\n```{json.dumps(self.event.__dict__, indent=4)}```")
+        await self.parent_interaction.edit_original_response(content="", embed=embed, view=None)
