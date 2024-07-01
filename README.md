@@ -13,6 +13,13 @@ This project aims to provide a Discord bot for managing a remote Assetto Corsa C
 
 ## Installation
 
+> [!NOTE]
+> To allow traffic in and out on your flask server, you need to run the following:
+> ``` 
+> sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 5000 -j ACCEPT
+> sudo netfilter-persistent save
+> ```
+
 1. Clone this repository to your local machine.
 2. Install the required dependencies by running `pip install -r requirements.txt`.
 3. Configure the bot token and server settings in the `config.json` file.
