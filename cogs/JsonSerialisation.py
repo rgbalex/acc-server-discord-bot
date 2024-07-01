@@ -10,7 +10,9 @@ from cogs.models.Event import Event
 
 @app_commands.guild_only()
 class JsonSerialisation(commands.GroupCog, name="generate"):
-    user_config_map = {}
+    def __init__(self, bot):
+        self.bot = bot
+        self.bot.user_config_map = {}
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -51,9 +53,9 @@ class JsonSerialisation(commands.GroupCog, name="generate"):
         )
 
     async def map_user_to_config(self, interaction: discord.Interaction) -> Event:
-        if interaction.user.id not in self.user_config_map:
-            self.user_config_map[interaction.user.id] = Event()
-        return self.user_config_map[interaction.user.id]
+        if interaction.user.id not in self.bot.user_config_map:
+            self.bot.user_config_map[interaction.user.id] = Event()
+        return self.bot.user_config_map[interaction.user.id]
 
 
 async def setup(bot):

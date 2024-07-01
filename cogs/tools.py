@@ -5,7 +5,7 @@ from discord import app_commands
 from discord.ext import commands
 
 
-@app_commands.dm_only()
+# @app_commands.dm_only()
 class Tools(commands.GroupCog, name="tools"):
     def __init__(self, bot):
         self.bot = bot
@@ -24,9 +24,41 @@ class Tools(commands.GroupCog, name="tools"):
     async def uptime(self, interaction: discord.Interaction) -> None:
         uptime = discord.utils.utcnow() - self.bot._uptime
         await interaction.response.send_message(
-            f"Uptime: {uptime.days}d {uptime.seconds//3600}h {(uptime.seconds//60)%60}m {uptime.seconds%60}s",
+            f"> Uptime: {uptime.days}d {uptime.seconds//3600}h {(uptime.seconds//60)%60}m {uptime.seconds%60}s",
             ephemeral=True,
         )
+
+    @commands.is_owner()
+    @commands.hybrid_command(
+        name="configs", description="List number of current configs", hidden=True
+    )
+    async def list_configs(self, ctx: commands.Context) -> None:
+        await ctx.send(f"> Number of configs: {len(self.bot.user_config_map)}")
+
+    @commands.is_owner()
+    @commands.hybrid_command(
+        name="reload", description="Reload an extension", hidden=True
+    )
+    async def reload(self, ctx: commands.Context, extension: str) -> None:
+        async with ctx.typing():
+            self.bot.reload_extension(extension)
+            await ctx.send(f"Reloaded extension {extension}")
+
+    @commands.is_owner()
+    @commands.hybrid_command(name="load", description="Load an extension", hidden=True)
+    async def load(self, ctx: commands.Context, extension: str) -> None:
+        async with ctx.typing():
+            self.bot.load_extension(extension)
+            await ctx.send(f"Loaded extension {extension}")
+
+    @commands.is_owner()
+    @commands.hybrid_command(
+        name="unload", description="Unload an extension", hidden=True
+    )
+    async def unload(self, ctx: commands.Context, extension: str) -> None:
+        async with ctx.typing():
+            self.bot.unload_extension(extension)
+            await ctx.send(f"Unloaded extension {extension}")
 
     @commands.is_owner()
     @commands.command(name="sync", description="Sync the command tree", hidden=True)

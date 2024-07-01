@@ -76,4 +76,4 @@ class DiscordBot(commands.Bot):
 
     @property
     def uptime(self) -> datetime.timedelta:
-        return datetime.datetime.utcnow() - self._uptime
+        return datetime.datetime.now(datetime.UTC) - self._uptime
