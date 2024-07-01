@@ -42,11 +42,7 @@ class EventJsonView(discord.ui.View):
         self.parent_interaction = interaction
         self.add_item(TrackSelect())
 
-        # self.session = discord.ui.Button(style=discord.ButtonStyle.primary, label="Sessions")
-        # self.session.callback = report
-        # self.add_item(self.report)
-
-    @discord.ui.button(label="Report", style=discord.ButtonStyle.red)
+    @discord.ui.button(label="Edit Session", style=discord.ButtonStyle.primary)
     async def report(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(AddNewSessionModal())
 
@@ -56,31 +52,34 @@ class AddNewSessionModal(discord.ui.Modal, title="Add a new session"):
     
     hourOfDay = discord.ui.TextInput(
         label='hourOfDay',
-        placeholder='17',
+        default='17',
     )
 
     dayOfWeekend = discord.ui.TextInput(
         label='dayOfWeekend',
-        placeholder='1',
+        default='1',
     )
 
     timeMultiplier = discord.ui.TextInput(
         label='timeMultiplier',
-        placeholder='1',
+        default='1',
     )
 
     sessionType = discord.ui.TextInput(
         label='sessionType',
-        placeholder='P',
+        default='P',
     )
 
     sessionDurationMinutes = discord.ui.TextInput(
         label='sessionDurationMinutes',
-        placeholder='10',
+        default='10',
     )
 
     async def on_timeout(self, interaction: discord.Interaction):
         await interaction.response.send_message("Creating a track timed out.", view=None, ephemeral=True)
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.send_message("Confirmed Session Added", ephemeral=True)
 
 class ChangeWeatherModal(discord.ui.Modal, title="Change weather for <track>"):
     def __init__(self, parent_interaction, track: str):
@@ -90,22 +89,22 @@ class ChangeWeatherModal(discord.ui.Modal, title="Change weather for <track>"):
 
     ambientTemp = discord.ui.TextInput(
         label='ambientTemp',
-        placeholder='26',
+        default='26',
     )
 
     cloudLevel = discord.ui.TextInput(
         label='cloudLevel',
-        placeholder='0.30000001192092898',
+        default='0.30000001192092898',
     )
 
     rain = discord.ui.TextInput(
         label='rain',
-        placeholder='0',
+        default='0',
     )
 
     weatherRandomness = discord.ui.TextInput(
         label='weatherRandomness',
-        placeholder='1',
+        default='1',
     )
 
     async def on_timeout(self, interaction: discord.Interaction):
@@ -120,31 +119,23 @@ class FurtherEventOptionsModal(discord.ui.Modal, title="Event setup for <track>"
     
     preRaceWaitingTimeSeconds = discord.ui.TextInput(
         label='preRaceWaitingTimeSeconds',
-        placeholder='80',
+        default='80',
     )
 
     postQualySeconds = discord.ui.TextInput(
         label='postQualySeconds',
-        placeholder='10',
+        default='10',
     )
 
     postRaceSeconds = discord.ui.TextInput(
         label='postRaceSeconds',
-        placeholder='15',
+        default='15',
     )
 
     sessionOverTimeSeconds = discord.ui.TextInput(
         label='sessionOverTimeSeconds',
-        placeholder='120',
+        default='120',
     )
-
-    # feedback = discord.ui.TextInput(
-    #     label='What do you think of this new feature?',
-    #     style=discord.TextStyle.long,
-    #     placeholder='Type your feedback here...',
-    #     required=False,
-    #     max_length=300,
-    # )
 
     async def on_submit(self, interaction: discord.Interaction):
         await interaction.response.send_message("Confirmed", ephemeral=True)
