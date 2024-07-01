@@ -1,6 +1,7 @@
 from typing import Coroutine
 from cogs.models.Session import Session
 from cogs.views.AddNewSessionModal import AddNewSessionModal
+from cogs.views.FurtherEventOptionsModal import FurtherEventOptionsModal
 from cogs.views.RemoveSessionModal import RemoveSessionModal
 from cogs.views.ChangeWeatherModal import ChangeWeatherModal
 from cogs.views.TrackSelect import TrackSelect
@@ -16,7 +17,7 @@ class EventJsonView(discord.ui.View):
         self.parent_interaction = interaction
         self.add_item(self.track_select)
 
-    @discord.ui.button(label="Add Session", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Add Session", style=discord.ButtonStyle.blurple)
     async def add_session(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
@@ -24,7 +25,7 @@ class EventJsonView(discord.ui.View):
             AddNewSessionModal(self.parent_interaction, self.event.sessions)
         )
 
-    @discord.ui.button(label="Remove Session", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Remove Session", style=discord.ButtonStyle.red)
     async def remove_session(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
@@ -32,7 +33,7 @@ class EventJsonView(discord.ui.View):
             RemoveSessionModal(self.parent_interaction, self.event.sessions)
         )
 
-    @discord.ui.button(label="Change Weather", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Change Weather", style=discord.ButtonStyle.blurple)
     async def change_weather(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
@@ -42,11 +43,15 @@ class EventJsonView(discord.ui.View):
             )
         )
 
-    @discord.ui.button(label="Edit Setup", style=discord.ButtonStyle.green)
+    @discord.ui.button(label="Edit Setup", style=discord.ButtonStyle.grey)
     async def edit_setup(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
-        pass
+        await interaction.response.send_modal(
+            FurtherEventOptionsModal(
+                self.parent_interaction, self.event.track, self.event
+            )
+        )
 
     @discord.ui.button(label="Generate", style=discord.ButtonStyle.green)
     async def generate(self, interaction: discord.Interaction, _: discord.ui.Button):
@@ -54,6 +59,7 @@ class EventJsonView(discord.ui.View):
             await interaction.response.send_message(
                 "No sessions added, adding a practice session...",
                 ephemeral=True,
+                delete_after=5,
             )
             self.event.sessions.append(Session().to_json())
         else:

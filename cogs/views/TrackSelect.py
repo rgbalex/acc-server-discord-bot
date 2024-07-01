@@ -14,7 +14,7 @@ class TrackSelect(discord.ui.Select):
             for track in TrackType.list()
         ]
         super().__init__(
-            placeholder="Select an option", max_values=1, min_values=1, options=options
+            placeholder="Select a track", max_values=1, min_values=1, options=options
         )
 
     async def callback(self, interaction: discord.Interaction):
