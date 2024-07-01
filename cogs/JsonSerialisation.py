@@ -12,7 +12,6 @@ from cogs.models.Event import Event
 class JsonSerialisation(commands.GroupCog, name="generate"):
     def __init__(self, bot):
         self.bot = bot
-        self.bot.user_config_map = {}
 
     @commands.Cog.listener()
     async def on_ready(self):

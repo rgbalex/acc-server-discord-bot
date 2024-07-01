@@ -144,3 +144,4 @@ Makefile
 
 # Token file
 .env
+config.json

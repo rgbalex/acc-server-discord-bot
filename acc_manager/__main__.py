@@ -1,4 +1,3 @@
-import os
 import logging
 
 from acc_manager.discord_main import DiscordBot
@@ -13,7 +12,7 @@ def main() -> None:
     )
 
     bot = DiscordBot(prefix="!", ext_dir="cogs")
-
+    bot.user_config_map = {}
     bot.run()
 
 

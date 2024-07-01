@@ -5,7 +5,6 @@ from discord import app_commands
 from discord.ext import commands
 
 
-# @app_commands.dm_only()
 class Tools(commands.GroupCog, name="tools"):
     def __init__(self, bot):
         self.bot = bot
@@ -48,7 +47,7 @@ class Tools(commands.GroupCog, name="tools"):
     @commands.hybrid_command(name="load", description="Load an extension", hidden=True)
     async def load(self, ctx: commands.Context, extension: str) -> None:
         async with ctx.typing():
-            self.bot.load_extension(extension)
+            await self.bot.load_extension(extension)
             await ctx.send(f"Loaded extension {extension}")
 
     @commands.is_owner()
