@@ -14,9 +14,6 @@ def main() -> None:
     )
 
     bot = DiscordBot(prefix="!", ext_dir="cogs")
-    bot.owner_id = OWNER_ID
-
-    logging.info(f"Starting bot; Owner ID: {bot.owner_id}")
 
     bot.run()
 

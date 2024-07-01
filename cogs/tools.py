@@ -5,7 +5,8 @@ from discord import app_commands
 from discord.ext import commands
 
 
-class Tools(commands.GroupCog, group_name="tools"):
+@app_commands.dm_only()
+class Tools(commands.GroupCog, name="tools"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -13,7 +14,10 @@ class Tools(commands.GroupCog, group_name="tools"):
     async def on_ready(self):
         logging.info("Extension 'Tools' is ready")
 
-    @app_commands.command(name="ping", description="Ping the bot")
+    @app_commands.command(
+        name="ping",
+        description="Ping the bot",
+    )
     async def ping(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message(
             f"> Pong! {round(self.bot.latency * 1000)}ms", ephemeral=True
@@ -28,11 +32,9 @@ class Tools(commands.GroupCog, group_name="tools"):
             ephemeral=True,
         )
 
+    @commands.is_owner()
     @commands.command(name="sync", description="Sync the command tree", hidden=True)
     async def sync(self, ctx: commands.Context) -> None:
-        if ctx.author.id != self.bot.owner_id:
-            return
-
         async with ctx.typing():
             if ctx.message.content.find("guild") > 0:
                 logging.info("Working on sync command tree...")
@@ -46,9 +48,30 @@ class Tools(commands.GroupCog, group_name="tools"):
                 )
             elif ctx.message.content.find("global") > 0:
                 logging.info("Working on sync command tree...")
-                await self.bot.tree.sync()
+                await self.bot.tree.sync(guild=None)
                 logging.info("Synced command tree")
                 await ctx.send("Synced command tree")
+            else:
+                await ctx.send("Invalid argument - must be 'global' or 'guild'")
+
+    @commands.is_owner()
+    @commands.command(name="clear", description="Clear the command tree", hidden=True)
+    async def clear(
+        self, ctx: commands.Context, guilds: commands.Greedy[discord.Object]
+    ) -> None:
+        async with ctx.typing():
+            if ctx.message.content.find("guild") > 0:
+                logging.info("Working on clear command tree...")
+                self.bot.tree.clear_commands(guild=ctx.guild)
+                await self.bot.tree.sync(guild=ctx.guild)
+                await ctx.send(
+                    f"Cleared command tree for guild {ctx.message.guild.name}"
+                )
+            elif ctx.message.content.find("global") > 0:
+                logging.info("Working on clear command tree...")
+                self.bot.tree.clear_commands(guild=None)
+                await self.bot.tree.sync(guild=None)
+                await ctx.send("Cleared command tree")
             else:
                 await ctx.send("Invalid argument - must be 'global' or 'guild'")
 
