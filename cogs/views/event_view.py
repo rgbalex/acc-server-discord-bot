@@ -31,20 +31,29 @@ track_list = [
 
 class TrackSelect(discord.ui.Select):
     def __init__(self):
+        self.pretty_track = None
         options=[ discord.SelectOption(label=track.replace("_", " ").title(), value=track) for track in track_list ]
         super().__init__(placeholder="Select an option",max_values=1,min_values=1,options=options)
     async def callback(self, interaction: discord.Interaction):
+        self.pretty_track = self.values[0].replace("_", " ").title()
         await interaction.response.send_modal(FurtherEventOptionsModal(interaction, self.values[0]))
+    def get_track(self):
+        return self.pretty_track
 
 class EventJsonView(discord.ui.View):
     def __init__(self, interaction, timeout = 180):
         super().__init__(timeout=timeout)
         self.parent_interaction = interaction
-        self.add_item(TrackSelect())
+        self.track_select = TrackSelect()
+        self.add_item(self.track_select)
 
     @discord.ui.button(label="Edit Session", style=discord.ButtonStyle.primary)
-    async def report(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def edit_session(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(AddNewSessionModal())
+
+    @discord.ui.button(label="Change Weather", style=discord.ButtonStyle.primary)
+    async def change_weather(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_modal(ChangeWeatherModal(self.parent_interaction,self.track_select.get_track()))
 
 class AddNewSessionModal(discord.ui.Modal, title="Add a new session"):
     def __init__(self):
@@ -85,6 +94,8 @@ class ChangeWeatherModal(discord.ui.Modal, title="Change weather for <track>"):
     def __init__(self, parent_interaction, track: str):
         super().__init__(timeout=20)
         self.parent_interaction = parent_interaction
+        if track is None:
+            track = "track"
         self.title = self.title.replace("<track>", track)
 
     ambientTemp = discord.ui.TextInput(
@@ -110,11 +121,14 @@ class ChangeWeatherModal(discord.ui.Modal, title="Change weather for <track>"):
     async def on_timeout(self, interaction: discord.Interaction):
         await interaction.response.send_message("Defining weather timed out.", view=None, ephemeral=True)
 
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.send_message("Confirmed weather settings", ephemeral=True)
+
 class FurtherEventOptionsModal(discord.ui.Modal, title="Event setup for <track>"):
     def __init__(self, parent_interaction, track: str):
         super().__init__(timeout=20)
         self.parent_interaction = parent_interaction
-        self.title = self.title.replace("<track>", track.capitalize())
+        self.title = self.title.replace("<track>", track.replace("_", " ").title())
 
     
     preRaceWaitingTimeSeconds = discord.ui.TextInput(
