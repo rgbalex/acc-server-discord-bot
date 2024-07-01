@@ -56,10 +56,6 @@ class DiscordBot(commands.Bot):
     async def setup_hook(self) -> None:
         self.client = aiohttp.ClientSession()
         await self._load_extensions()
-        # if not self.synced:
-        #     await self.tree.sync()
-        #     self.synced = not self.synced
-        #     self.logger.info("Synced command tree")
 
     async def close(self) -> None:
         await super().close()

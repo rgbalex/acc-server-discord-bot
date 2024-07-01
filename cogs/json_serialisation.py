@@ -26,7 +26,7 @@ class JsonSerialisation(commands.GroupCog, name="json"):
     async def generate_event(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message(
             f"Generated event JSON file",
-            view=EventJsonView(),
+            view=EventJsonView(interaction),
             ephemeral=True
         )
 
