@@ -21,7 +21,6 @@ class ChangeWeatherModal(discord.ui.Modal, title="Change weather for <track>"):
         if self.event.weatherRandomness is not None:
             self.weatherRandomness.default = str(self.event.weatherRandomness)
 
-
     ambientTemp = discord.ui.TextInput(
         label="ambientTemp",
         default="26",

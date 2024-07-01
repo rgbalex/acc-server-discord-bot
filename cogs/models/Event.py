@@ -1,5 +1,6 @@
 from cogs.models.Session import Session
 
+
 class Event:
     def __init__(self):
         self.track = None
@@ -10,8 +11,8 @@ class Event:
         self.sessionOverTimeSeconds = None
         self.ambientTemp = None
         self.trackTemp = None
-        self.cloudLevel : float = None
-        self.rain : float = None
+        self.cloudLevel: float = None
+        self.rain: float = None
         self.weatherRandomness = None
         self.configVersion = None
         self.sessions = []

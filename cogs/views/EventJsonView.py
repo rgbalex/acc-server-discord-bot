@@ -30,14 +30,19 @@ class EventJsonView(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         await interaction.response.send_modal(
-            ChangeWeatherModal(self.parent_interaction, self.event, self.track_select.get_track())
+            ChangeWeatherModal(
+                self.parent_interaction, self.event, self.track_select.get_track()
+            )
         )
-    
+
     @discord.ui.button(label="Edit Setup", style=discord.ButtonStyle.green)
-    async def edit_setup(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def edit_setup(
+        self, interaction: discord.Interaction, button: discord.ui.Button
+    ):
         pass
 
     @discord.ui.button(label="Generate", style=discord.ButtonStyle.green)
-    async def generate(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def generate(
+        self, interaction: discord.Interaction, button: discord.ui.Button
+    ):
         pass
-

@@ -7,6 +7,7 @@ from discord.ext import commands
 from cogs.views.EventJsonView import EventJsonView
 from cogs.models.Event import Event
 
+
 @app_commands.guild_only()
 class JsonSerialisation(commands.GroupCog, name="generate"):
     user_config_map = {}
@@ -22,14 +23,18 @@ class JsonSerialisation(commands.GroupCog, name="generate"):
             ephemeral=True,
         )
 
-    @app_commands.command(name="eventrules", description="Generate an eventRules JSON file")
+    @app_commands.command(
+        name="eventrules", description="Generate an eventRules JSON file"
+    )
     async def generate_event_rules(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message(
             "Please input required information for the eventRules",
             ephemeral=True,
         )
 
-    @app_commands.command(name="configuration", description="Generate a configuration JSON file")
+    @app_commands.command(
+        name="configuration", description="Generate a configuration JSON file"
+    )
     async def generate_configuration(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message(
             "Please input required information for the configuration",
@@ -39,9 +44,6 @@ class JsonSerialisation(commands.GroupCog, name="generate"):
     @app_commands.command(name="event", description="Generate an event JSON file")
     async def generate_event(self, interaction: discord.Interaction) -> None:
         event: Event = await self.map_user_to_config(interaction)
-
-        print(event)
-
         await interaction.response.send_message(
             f"Please input required information for the event",
             view=EventJsonView(interaction, event),
@@ -52,6 +54,7 @@ class JsonSerialisation(commands.GroupCog, name="generate"):
         if interaction.user.id not in self.user_config_map:
             self.user_config_map[interaction.user.id] = Event()
         return self.user_config_map[interaction.user.id]
+
 
 async def setup(bot):
     await bot.add_cog(JsonSerialisation(bot))

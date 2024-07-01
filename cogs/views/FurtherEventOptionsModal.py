@@ -29,7 +29,9 @@ class FurtherEventOptionsModal(discord.ui.Modal, title="Event setup for <track>"
     )
 
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.send_message("Confirmed event setup.", ephemeral=True)
+        await interaction.response.send_message(
+            "Confirmed event setup.", ephemeral=True
+        )
 
     async def on_timeout(self, interaction: discord.Interaction):
         await interaction.response.send_message(
