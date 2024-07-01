@@ -14,10 +14,7 @@ class Tools(commands.GroupCog, name="tools"):
     async def on_ready(self):
         logging.info("Extension 'Tools' is ready")
 
-    @app_commands.command(
-        name="ping",
-        description="Ping the bot",
-    )
+    @app_commands.command(name="ping", description="Ping the bot")
     async def ping(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message(
             f"> Pong! {round(self.bot.latency * 1000)}ms", ephemeral=True
@@ -26,7 +23,6 @@ class Tools(commands.GroupCog, name="tools"):
     @app_commands.command(name="uptime", description="Get the bot's uptime")
     async def uptime(self, interaction: discord.Interaction) -> None:
         uptime = discord.utils.utcnow() - self.bot._uptime
-        # print the days, hours, minutes, and seconds of uptime
         await interaction.response.send_message(
             f"Uptime: {uptime.days}d {uptime.seconds//3600}h {(uptime.seconds//60)%60}m {uptime.seconds%60}s",
             ephemeral=True,
