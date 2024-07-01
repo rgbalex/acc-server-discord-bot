@@ -47,5 +47,5 @@ class AddNewSessionModal(discord.ui.Modal, title="Add a new session"):
         s.sessionDurationMinutes = int(self.sessionDurationMinutes.value)
         self.sessions.append(s.to_json())
         await interaction.response.send_message(
-            "Confirmed session added.", ephemeral=True
+            "Confirmed session added.", ephemeral=True, delete_after=5
         )

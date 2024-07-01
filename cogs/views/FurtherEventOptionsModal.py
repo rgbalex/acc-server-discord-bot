@@ -39,7 +39,7 @@ class FurtherEventOptionsModal(discord.ui.Modal, title="Event setup for <track>"
         self.event.postRaceSeconds = int(self.postRaceSeconds.value)
         self.event.sessionOverTimeSeconds = int(self.sessionOverTimeSeconds.value)
         await interaction.response.send_message(
-            "Confirmed event setup.", ephemeral=True
+            "Confirmed event setup.", ephemeral=True, delete_after=5
         )
 
     async def on_timeout(self):

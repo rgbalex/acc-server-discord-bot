@@ -59,5 +59,5 @@ class ChangeWeatherModal(discord.ui.Modal, title="Change weather for <track>"):
         self.event.weatherRandomness = float(self.weatherRandomness.value)
 
         await interaction.response.send_message(
-            "Confirmed weather settings.", ephemeral=True
+            "Confirmed weather settings.", ephemeral=True, delete_after=5
         )

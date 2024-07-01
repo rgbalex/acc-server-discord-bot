@@ -28,5 +28,5 @@ class RemoveSessionModal(discord.ui.Modal, title="Remove a session"):
             )
             return
         await interaction.response.send_message(
-            "Confirmed session removed.", ephemeral=True
+            "Confirmed session removed.", ephemeral=True, delete_after=5
         )
