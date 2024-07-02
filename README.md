@@ -4,6 +4,12 @@
 
 This project aims to provide a Discord bot for managing a remote Assetto Corsa Competizione server. The bot will allow server administrators to easily control various aspects of the server directly from their Discord server.
 
+## References
+
+https://gist.github.com/AbstractUmbra/a9c188797ae194e592efe05fa129c57f
+
+https://gist.github.com/lykn/a2b68cb790d6dad8ecff75b2aa450f23
+
 ## Features
 
 - Start, stop, and restart the Assetto Corsa Competizione server remotely.
