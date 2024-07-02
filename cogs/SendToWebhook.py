@@ -39,12 +39,13 @@ class SendToWebhook(commands.Cog):
                             ephemeral=True,
                         )
                     elif server_status == "rebooting":
-                        msg = await interaction.response.send_message(
+                        await interaction.response.send_message(
                             "> Server is running and gameserver is rebooting...\n> This takes some time; please be patient (can be up to 5 minutes)",
                             ephemeral=True,
                         )
+                        msg = None
                         counter = 0
-                        attempt = 1
+                        attempt = 0
                         while server_status == "rebooting":
                             await asyncio.sleep(1)
                             counter += 1
@@ -54,17 +55,17 @@ class SendToWebhook(commands.Cog):
                                         (await response.content.read()).decode()
                                     )["status"]
                                     if server_status == "running":
-                                        await interaction.followup.send(
-                                            "> Server is running and gameserver is running.",
-                                            ephemeral=True,
-                                        )
+                                        await msg.edit(content="> Server is running and gameserver has started.\n> Please be patient as it boots up and registers with ACC")
                                     else:
                                         attempt += 1
-                                        await msg.edit(
-                                            content=f"> Server is running and gameserver is rebooting... attempt {attempt}",
-                                            ephemeral=True,
-                                            silent=True,
-                                        )
+                                        if msg is None:
+                                            msg = await interaction.followup.send(
+                                                "> Server is running and gameserver is rebooting... attempt 1",
+                                                ephemeral=True,
+                                                silent=True,
+                                            )
+                                        else:
+                                            await msg.edit(content=f"> Server is running and gameserver is rebooting... attempt {attempt}")
                 elif response.status == 405:
                     await interaction.response.send_message(
                         "> Method not allowed.", ephemeral=True
