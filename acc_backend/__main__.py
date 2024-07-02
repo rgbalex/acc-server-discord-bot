@@ -48,14 +48,6 @@ def handle_webhook():
         f.write(str(data))
     logging.info("File written")
 
-    logging.info("Copying to server directory...")
-    return_value = os.system(f"sudo cp ./event.json {config['file_path']}")
-    if return_value != 0:
-        logging.error("Error copying file to server directory")
-        status = "copy error"
-        return "Error copying file to server directory"
-    logging.info("Copied to server directory")
-
     logging.info("Rebooting server...")
     status = "rebooting"
     os.system(f"{config['reboot_command']}")
