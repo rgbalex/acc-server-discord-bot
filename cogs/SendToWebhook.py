@@ -25,12 +25,6 @@ class SendToWebhook(commands.Cog):
     async def on_ready(self):
         logging.info("Extension 'SendToWebhook' is ready")
 
-    @app_commands.command(
-        name="broadcast_status", description="Broadcast the status of the server"
-    )
-    async def broadcast_status(self, interaction: discord.Interaction) -> None:
-        pass
-
     @app_commands.command(name="status", description="Check the status of the server")
     async def status(self, interaction: discord.Interaction) -> None:
         async with aiohttp.ClientSession() as session:

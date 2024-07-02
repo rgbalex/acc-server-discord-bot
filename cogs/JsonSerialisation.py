@@ -17,31 +17,6 @@ class JsonSerialisation(commands.GroupCog, name="generate"):
     async def on_ready(self):
         logging.info("Extension 'JsonSerialisation' is ready")
 
-    # @app_commands.command(name="settings", description="Generate a settings JSON file")
-    # async def generate_settings(self, interaction: discord.Interaction) -> None:
-    #     await interaction.response.send_message(
-    #         "Please input required information for the settings",
-    #         ephemeral=True,
-    #     )
-
-    # @app_commands.command(
-    #     name="eventrules", description="Generate an eventRules JSON file"
-    # )
-    # async def generate_event_rules(self, interaction: discord.Interaction) -> None:
-    #     await interaction.response.send_message(
-    #         "Please input required information for the eventRules",
-    #         ephemeral=True,
-    #     )
-
-    # @app_commands.command(
-    #     name="configuration", description="Generate a configuration JSON file"
-    # )
-    # async def generate_configuration(self, interaction: discord.Interaction) -> None:
-    #     await interaction.response.send_message(
-    #         "Please input required information for the configuration",
-    #         ephemeral=True,
-    #     )
-
     @app_commands.command(name="event", description="Generate an event JSON file")
     async def generate_event(self, interaction: discord.Interaction) -> None:
         event: Event = await self.map_user_to_config(interaction)

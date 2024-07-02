@@ -4,10 +4,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from acc_manager.discord_main import DiscordBot
+
 
 class Tools(commands.GroupCog, name="tools"):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot : DiscordBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -40,14 +42,14 @@ class Tools(commands.GroupCog, name="tools"):
     )
     async def reload(self, ctx: commands.Context, extension: str) -> None:
         async with ctx.typing():
-            self.bot.reload_extension(extension)
+            await self.bot.reload_extension("cogs."+extension)
             await ctx.send(f"Reloaded extension {extension}")
 
     @commands.is_owner()
     @commands.hybrid_command(name="load", description="Load an extension", hidden=True)
     async def load(self, ctx: commands.Context, extension: str) -> None:
         async with ctx.typing():
-            await self.bot.load_extension(extension)
+            await self.bot.load_extension("cogs."+extension)
             await ctx.send(f"Loaded extension {extension}")
 
     @commands.is_owner()
@@ -56,7 +58,7 @@ class Tools(commands.GroupCog, name="tools"):
     )
     async def unload(self, ctx: commands.Context, extension: str) -> None:
         async with ctx.typing():
-            self.bot.unload_extension(extension)
+            await self.bot.unload_extension("cogs."+extension)
             await ctx.send(f"Unloaded extension {extension}")
 
     @commands.is_owner()
