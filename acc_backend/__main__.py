@@ -30,12 +30,11 @@ def handle_webhook():
     data = request.get_json()
     logging.info("Webhook received")
     logging.info(data)
-    
-    while status != "running":
-        pass
 
-    threading.Thread(target=handle_webhook).start()
+    if status != "running":
+        return "Server is currently rebooting. Please wait for it to finish."
     
+    threading.Thread(target=handle_webhook).start()
     return "Webhook received successfully"
 
 def handle_webhook():
@@ -44,17 +43,22 @@ def handle_webhook():
     logging.info("Writing file...")
     with open("./event.json", "w") as f:
         f.write(str(data))
+    logging.info("File written")
 
-    logging.info("Copying to server directory...")
-    os.system(f"sudo cp ./event.json {config['file_path']}")
-
-    logging.info("Copied to server directory")
     logging.info("Rebooting server...")
     status = "rebooting"
     os.system(f"{config['reboot_command']}")
     status = "running"
-
     logging.info("Service rebooted.")
+
+    logging.info("Copying to server directory...")
+    return_value = os.system(f"sudo cp ./event.json {config['file_path']}")
+    if return_value != 0:
+        logging.error("Error copying file to server directory")
+        status = "copy error"
+        return "Error copying file to server directory"
+    logging.info("Copied to server directory")
+    return "Success"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
