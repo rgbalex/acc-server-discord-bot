@@ -1,3 +1,4 @@
+import threading
 from flask import Flask, request
 import logging, json, os
 
@@ -6,6 +7,8 @@ logging.basicConfig(
 )
 
 app = Flask(__name__)
+data = None
+status = "running"
 
 try:
     config = json.load(open("config.json"))
@@ -15,29 +18,43 @@ except FileNotFoundError:
         json.dump(config, f, indent=4)
     raise FileNotFoundError("Please fill out the config.json file")
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-    return "Hello, World!"
+    global status
+    return {"status": status}
 
 @app.route("/event", methods=["POST"])
 def handle_webhook():
+    global data
+    global status
     data = request.get_json()
     logging.info("Webhook received")
     logging.info(data)
-    logging.info("Copying to server directory...")
+    
+    while status != "running":
+        pass
 
-    with open(config["file_path"], "w") as f:
+    threading.Thread(target=handle_webhook).start()
+    
+    return "Webhook received successfully"
+
+def handle_webhook():
+    global data
+    global status
+    logging.info("Writing file...")
+    with open("./event.json", "w") as f:
         f.write(str(data))
+
+    logging.info("Copying to server directory...")
+    os.system(f"sudo cp ./event.json {config['file_path']}")
 
     logging.info("Copied to server directory")
     logging.info("Rebooting server...")
-
+    status = "rebooting"
     os.system(f"{config['reboot_command']}")
+    status = "running"
 
     logging.info("Service rebooted.")
-
-    return "Webhook received successfully"
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
