@@ -18,10 +18,12 @@ except FileNotFoundError:
         json.dump(config, f, indent=4)
     raise FileNotFoundError("Please fill out the config.json file")
 
+
 @app.route("/", methods=["GET"])
 def home():
     global status
     return {"status": status}
+
 
 @app.route("/event", methods=["POST"])
 def handle_webhook():
@@ -33,9 +35,10 @@ def handle_webhook():
 
     if status != "running":
         return "Server is currently rebooting. Please wait for it to finish."
-    
+
     threading.Thread(target=handle_webhook).start()
     return "Webhook received successfully"
+
 
 def handle_webhook():
     global data
@@ -59,6 +62,7 @@ def handle_webhook():
         return "Error copying file to server directory"
     logging.info("Copied to server directory")
     return "Success"
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
